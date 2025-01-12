@@ -1,0 +1,41 @@
+name: Praxis CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: |
+          cd Client
+          pnpm install
+          cd Server
+          pnpm install
+
+      - name: Run Frontend Tests
+        run: |
+          cd frontend
+          npm run test
+
+      - name: Run Backend Tests
+        run: |
+          cd backend
+          pnpm run test
+
+      - name: Build Client
+        run: |
+          cd Client
+          pnpm run build
